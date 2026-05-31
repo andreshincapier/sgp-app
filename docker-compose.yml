@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  sgp-db:
+    image: postgres:16-alpine
+    container_name: sgp-db
+    environment:
+      POSTGRES_DB: sgp_db
+      POSTGRES_USER: sgp_user
+      POSTGRES_PASSWORD: sgp_pass_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sgp_user -d sgp_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  sgp-backend:
+    build: ./backend
+    container_name: sgp-backend
+    environment:
+      NODE_ENV: development
+      DB_HOST: sgp-db
+      DB_PORT: 5432
+      DB_NAME: sgp_db
+      DB_USER: sgp_user
+      DB_PASSWORD: sgp_pass_2026
+      JWT_SECRET: sgp_jwt_secret_2026_dev
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    depends_on:
+      sgp-db:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src
+
+  sgp-frontend:
+    build: ./frontend
+    container_name: sgp-frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:4000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sgp-backend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+
+volumes:
+  pgdata:
