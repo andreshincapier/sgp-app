@@ -1,2 +1,6 @@
 node_modules
 build
+cypress
+cypress.config.js
+.dockerignore
+.gitignore

@@ -9,9 +9,16 @@
     "react-scripts": "5.0.1",
     "axios": "^1.6.7"
   },
+  "devDependencies": {
+    "cypress": "^13.7.0",
+    "start-server-and-test": "^2.0.3"
+  },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test:e2e": "start-server-and-test start http://localhost:3000 cy:run"
   },
   "browserslist": {
     "production": [">0.2%", "not dead", "not op_mini all"],

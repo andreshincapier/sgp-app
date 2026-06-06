@@ -1,2 +1,16 @@
 node_modules/
 .env
+.DS_Store
+
+# Reportes de pruebas
+coverage/
+
+# Cypress (artefactos generados al correr pruebas E2E)
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# Editores
+.vscode/
+.idea/
+*.swp
